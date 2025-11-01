@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { 
@@ -802,4 +802,10 @@ const CodesPage = () => {
   );
 };
 
-export default CodesPage;
+export default function CodesPageWithSuspense() {
+  return (
+    <Suspense fallback={<div className="p-6">Loading codes...</div>}>
+      <CodesPage />
+    </Suspense>
+  );
+}
