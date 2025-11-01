@@ -1,0 +1,668 @@
+{
+    "indexes":  [
+                    {
+                        "collectionGroup":  "users",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "email",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "users",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "status",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "registrationDate",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "users",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "country",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "registrationDate",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "users",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "points",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "users",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "language",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "lastLogin",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "albums",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "status",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "createdAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "albums",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "category",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "name",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "albums",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "createdBy",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "createdAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "albums",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "capacity",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "cards",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "albumId",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "position",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "cards",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "rarity",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "points",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "cards",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "type",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "name",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "cards",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "albumId",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "rarity",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "points",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "cards",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "createdBy",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "createdAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "stocks",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "status",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "createdAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "stocks",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "rarity",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "price",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "stocks",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "currency",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "price",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "stocks",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "createdBy",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "updatedAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "banners",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "isActive",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "position",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "banners",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "startDate",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "endDate",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "banners",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "isActive",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "startDate",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "endDate",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "sales",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "userId",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "createdAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "sales",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "status",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "createdAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "sales",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "paymentMethod",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "createdAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "sales",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "totalAmount",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "sales",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "currency",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "totalAmount",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "redeemCodes",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "code",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "redeemCodes",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "status",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "createdAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "redeemCodes",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "cardId",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "status",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "redeemCodes",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "type",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "createdAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "redeemCodes",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "usedBy",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "usedAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "redeemCodes",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "expiresAt",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "redeemCodes",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "cardId",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "codeId",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "admins",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "role",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "name",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "admins",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "status",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "lastLogin",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "admins",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "email",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "images",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "entityType",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "entityId",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "images",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "type",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "uploadedAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "images",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "uploadedBy",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "uploadedAt",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "images",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "size",
+                                           "order":  "DESCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "users",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "country",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "firstName",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "__name__",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "users",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "state",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "firstName",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "__name__",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    },
+                    {
+                        "collectionGroup":  "users",
+                        "queryScope":  "COLLECTION",
+                        "fields":  [
+                                       {
+                                           "fieldPath":  "city",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "firstName",
+                                           "order":  "ASCENDING"
+                                       },
+                                       {
+                                           "fieldPath":  "__name__",
+                                           "order":  "ASCENDING"
+                                       }
+                                   ]
+                    }
+                ],
+    "fieldOverrides":  [
+                           {
+                               "collectionGroup":  "users",
+                               "fieldPath":  "cardsOwned",
+                               "indexes":  [
+                                               {
+                                                   "order":  "ASCENDING",
+                                                   "queryScope":  "COLLECTION"
+                                               },
+                                               {
+                                                   "arrayConfig":  "CONTAINS",
+                                                   "queryScope":  "COLLECTION"
+                                               }
+                                           ]
+                           },
+                           {
+                               "collectionGroup":  "sales",
+                               "fieldPath":  "purchaseDetails",
+                               "indexes":  [
+                                               {
+                                                   "order":  "ASCENDING",
+                                                   "queryScope":  "COLLECTION"
+                                               }
+                                           ]
+                           },
+                           {
+                               "collectionGroup":  "admins",
+                               "fieldPath":  "permissions",
+                               "indexes":  [
+                                               {
+                                                   "order":  "ASCENDING",
+                                                   "queryScope":  "COLLECTION"
+                                               }
+                                           ]
+                           }
+                       ],
+    "exemptedFields":  [
+                           {
+                               "collectionGroup":  "users",
+                               "fieldPath":  "metadata"
+                           },
+                           {
+                               "collectionGroup":  "albums",
+                               "fieldPath":  "metadata"
+                           },
+                           {
+                               "collectionGroup":  "cards",
+                               "fieldPath":  "metadata"
+                           },
+                           {
+                               "collectionGroup":  "stocks",
+                               "fieldPath":  "metadata"
+                           },
+                           {
+                               "collectionGroup":  "banners",
+                               "fieldPath":  "metadata"
+                           },
+                           {
+                               "collectionGroup":  "sales",
+                               "fieldPath":  "metadata"
+                           },
+                           {
+                               "collectionGroup":  "redeemCodes",
+                               "fieldPath":  "metadata"
+                           },
+                           {
+                               "collectionGroup":  "admins",
+                               "fieldPath":  "metadata"
+                           },
+                           {
+                               "collectionGroup":  "images",
+                               "fieldPath":  "metadata"
+                           }
+                       ]
+}

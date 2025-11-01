@@ -1,0 +1,475 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    
+    "users": {
+      "$userId": {
+        ".read": "$userId === auth.uid || root.child('admins').child(auth.uid).exists()",
+        ".write": "$userId === auth.uid || root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['firstName', 'lastName', 'email', 'dateOfBirth', 'country', 'registrationDate'])",
+        
+        "firstName": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 50"
+        },
+        "lastName": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 50"
+        },
+        "email": {
+          ".validate": "newData.isString() && newData.val().matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/)"
+        },
+        "dateOfBirth": {
+          ".validate": "newData.isString() && newData.val().matches(/^\\d{4}-\\d{2}-\\d{2}$/)"
+        },
+        "country": {
+          ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 100"
+        },
+        "state": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        },
+        "city": {
+          ".validate": "newData.isString() && newData.val().length <= 100"
+        },
+        "gender": {
+          ".validate": "newData.isString() && (newData.val() === 'male' || newData.val() === 'female' || newData.val() === 'other' || newData.val() === 'prefer_not_to_say')"
+        },
+        "language": {
+          ".validate": "newData.isString() && (newData.val() === 'en' || newData.val() === 'es' || newData.val() === 'fr' || newData.val() === 'de' || newData.val() === 'it' || newData.val() === 'pt')"
+        },
+        "points": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 1000000"
+        },
+        "cardsOwned": {
+          "$cardId": {
+            ".validate": "newData.isBoolean()"
+          }
+        },
+        "status": {
+          ".validate": "newData.isString() && (newData.val() === 'active' || newData.val() === 'inactive' || newData.val() === 'suspended')"
+        },
+        "registrationDate": {
+          ".validate": "newData.isString()"
+        },
+        "lastLogin": {
+          ".validate": "newData.isString()"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "createdBy": {
+          ".validate": "newData.isString()"
+        },
+        "metadata": {
+          ".validate": "newData.hasChildren()"
+        }
+      }
+    },
+    
+    "albums": {
+      ".read": true,
+      "$albumId": {
+        ".write": "root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['name', 'description', 'capacity'])",
+        
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100"
+        },
+        "description": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 500"
+        },
+        "capacity": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 1000"
+        },
+        "currentCount": {
+          ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= newData.parent().child('capacity').val()"
+        },
+        "image": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "category": {
+          ".validate": "newData.isString() && (newData.val() === 'nature' || newData.val() === 'sports' || newData.val() === 'technology' || newData.val() === 'art' || newData.val() === 'history' || newData.val() === 'science' || newData.val() === 'fantasy' || newData.val() === 'adventure')"
+        },
+        "status": {
+          ".validate": "newData.isString() && (newData.val() === 'active' || newData.val() === 'inactive' || newData.val() === 'draft' || newData.val() === 'published')"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "createdBy": {
+          ".validate": "newData.isString() && root.child('admins').child(newData.val()).exists()"
+        },
+        "metadata": {
+          ".validate": "newData.hasChildren()"
+        }
+      }
+    },
+    
+    "cards": {
+      ".read": true,
+      "$cardId": {
+        ".write": "root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['cardId', 'name', 'description', 'rarity', 'points', 'albumId'])",
+        
+        "cardId": {
+          ".validate": "newData.isString() && newData.val().matches(/^CARD_[A-Z0-9]{3,10}$/) && newData.val().length <= 20"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100"
+        },
+        "description": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 500"
+        },
+        "image": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "type": {
+          ".validate": "newData.isString() && (newData.val() === 'character' || newData.val() === 'spell' || newData.val() === 'item' || newData.val() === 'weapon' || newData.val() === 'creature' || newData.val() === 'artifact')"
+        },
+        "rarity": {
+          ".validate": "newData.isString() && (newData.val() === 'common' || newData.val() === 'rare' || newData.val() === 'epic' || newData.val() === 'legendary')"
+        },
+        "points": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 10000"
+        },
+        "albumId": {
+          ".validate": "newData.isString() && root.child('albums').child(newData.val()).exists()"
+        },
+        "position": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 1000"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "createdBy": {
+          ".validate": "newData.isString() && root.child('admins').child(newData.val()).exists()"
+        },
+        "metadata": {
+          ".validate": "newData.hasChildren()"
+        }
+      }
+    },
+    
+    "stocks": {
+      ".read": "root.child('admins').child(auth.uid).exists()",
+      "$stockId": {
+        ".write": "root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['stockNumber', 'name', 'description', 'rarity', 'price', 'currency'])",
+        
+        "stockNumber": {
+          ".validate": "newData.isString() && newData.val().matches(/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$/)"
+        },
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100"
+        },
+        "description": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 500"
+        },
+        "rarity": {
+          ".validate": "newData.isString() && (newData.val() === 'common' || newData.val() === 'rare' || newData.val() === 'epic' || newData.val() === 'legendary')"
+        },
+        "price": {
+          ".validate": "newData.isNumber() && newData.val() >= 0.01 && newData.val() <= 10000"
+        },
+        "currency": {
+          ".validate": "newData.isString() && (newData.val() === 'USD' || newData.val() === 'EUR' || newData.val() === 'GBP')"
+        },
+        "image": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "status": {
+          ".validate": "newData.isString() && (newData.val() === 'active' || newData.val() === 'inactive' || newData.val() === 'out_of_stock')"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "createdBy": {
+          ".validate": "newData.isString() && root.child('admins').child(newData.val()).exists()"
+        },
+        "metadata": {
+          ".validate": "newData.hasChildren()"
+        }
+      }
+    },
+    
+    "banners": {
+      ".read": true,
+      "$bannerId": {
+        ".write": "root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['title', 'image'])",
+        
+        "title": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100"
+        },
+        "description": {
+          ".validate": "newData.isString() && newData.val().length <= 300"
+        },
+        "image": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "linkUrl": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "position": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 100"
+        },
+        "isActive": {
+          ".validate": "newData.isBoolean()"
+        },
+        "startDate": {
+          ".validate": "newData.isNumber()"
+        },
+        "endDate": {
+          ".validate": "newData.isNumber() && newData.val() > newData.parent().child('startDate').val()"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "createdBy": {
+          ".validate": "newData.isString() && root.child('admins').child(newData.val()).exists()"
+        },
+        "metadata": {
+          ".validate": "newData.hasChildren()"
+        }
+      }
+    },
+    
+    "sales": {
+      "$saleId": {
+        ".read": "data.child('userId').val() === auth.uid || root.child('admins').child(auth.uid).exists()",
+        ".write": "root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['userId', 'userEmail', 'purchaseDetails', 'totalAmount'])",
+        
+        "srNumber": {
+          ".validate": "newData.isNumber() && newData.val() >= 1"
+        },
+        "userId": {
+          ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()"
+        },
+        "userEmail": {
+          ".validate": "newData.isString() && newData.val().matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/)"
+        },
+        "purchaseDetails": {
+          "$itemKey": {
+            ".validate": "newData.hasChildren(['type', 'name', 'quantity', 'price'])",
+            "type": {
+              ".validate": "newData.isString() && (newData.val() === 'album' || newData.val() === 'card' || newData.val() === 'packet' || newData.val() === 'stock')"
+            },
+            "name": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100"
+            },
+            "quantity": {
+              ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 100"
+            },
+            "price": {
+              ".validate": "newData.isNumber() && newData.val() >= 0.01"
+            },
+            "itemId": {
+              ".validate": "newData.isString()"
+            }
+          }
+        },
+        "totalAmount": {
+          ".validate": "newData.isNumber() && newData.val() >= 0.01 && newData.val() <= 100000"
+        },
+        "currency": {
+          ".validate": "newData.isString() && (newData.val() === 'USD' || newData.val() === 'EUR' || newData.val() === 'GBP')"
+        },
+        "paymentMethod": {
+          ".validate": "newData.isString() && (newData.val() === 'credit_card' || newData.val() === 'debit_card' || newData.val() === 'paypal' || newData.val() === 'stripe' || newData.val() === 'bank_transfer')"
+        },
+        "status": {
+          ".validate": "newData.isString() && (newData.val() === 'pending' || newData.val() === 'completed' || newData.val() === 'cancelled' || newData.val() === 'refunded')"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "metadata": {
+          ".validate": "newData.hasChildren()"
+        }
+      }
+    },
+    
+    "redeemCodes": {
+      "$codeId": {
+        ".read": "data.child('usedBy').val() === auth.uid || root.child('admins').child(auth.uid).exists()",
+        ".write": "root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['code', 'cardId', 'type'])",
+        
+        "code": {
+          ".validate": "newData.isString() && newData.val().matches(/^[A-Z0-9]{6,20}$/) && newData.val().length >= 6 && newData.val().length <= 20"
+        },
+        "cardId": {
+          ".validate": "newData.isString() && root.child('cards').child(newData.val()).exists()"
+        },
+        "qrCode": {
+          ".validate": "newData.isString() && newData.val().length <= 10000"
+        },
+        "type": {
+          ".validate": "newData.isString() && (newData.val() === 'alphanumeric' || newData.val() === 'qr')"
+        },
+        "status": {
+          ".validate": "newData.isString() && (newData.val() === 'active' || newData.val() === 'used' || newData.val() === 'expired')"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "usedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "usedBy": {
+          ".validate": "newData.isString() && root.child('users').child(newData.val()).exists()"
+        },
+        "expiresAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "createdBy": {
+          ".validate": "newData.isString() && root.child('admins').child(newData.val()).exists()"
+        },
+        "metadata": {
+          ".validate": "newData.hasChildren()"
+        }
+      }
+    },
+    
+    "admins": {
+      ".read": "root.child('admins').child(auth.uid).exists()",
+      "$adminId": {
+        ".write": "root.child('admins').child(auth.uid).child('role').val() === 'super_admin'",
+        ".validate": "newData.hasChildren(['name', 'email', 'role'])",
+        
+        "name": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100"
+        },
+        "email": {
+          ".validate": "newData.isString() && newData.val().matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/)"
+        },
+        "role": {
+          ".validate": "newData.isString() && (newData.val() === 'super_admin' || newData.val() === 'admin' || newData.val() === 'moderator')"
+        },
+        "permissions": {
+          "users": {
+            ".validate": "newData.isString() && (newData.val() === 'read' || newData.val() === 'write' || newData.val() === 'delete')"
+          },
+          "albums": {
+            ".validate": "newData.isString() && (newData.val() === 'read' || newData.val() === 'write' || newData.val() === 'delete')"
+          },
+          "cards": {
+            ".validate": "newData.isString() && (newData.val() === 'read' || newData.val() === 'write' || newData.val() === 'delete')"
+          },
+          "stocks": {
+            ".validate": "newData.isString() && (newData.val() === 'read' || newData.val() === 'write' || newData.val() === 'delete')"
+          },
+          "banners": {
+            ".validate": "newData.isString() && (newData.val() === 'read' || newData.val() === 'write' || newData.val() === 'delete')"
+          },
+          "sales": {
+            ".validate": "newData.isString() && newData.val() === 'read'"
+          },
+          "codes": {
+            ".validate": "newData.isString() && (newData.val() === 'read' || newData.val() === 'write' || newData.val() === 'delete')"
+          }
+        },
+        "status": {
+          ".validate": "newData.isString() && (newData.val() === 'active' || newData.val() === 'inactive' || newData.val() === 'suspended')"
+        },
+        "lastLogin": {
+          ".validate": "newData.isNumber()"
+        },
+        "createdAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "updatedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "createdBy": {
+          ".validate": "newData.isString() && root.child('admins').child(newData.val()).exists()"
+        },
+        "metadata": {
+          ".validate": "newData.hasChildren()"
+        }
+      }
+    },
+    
+    "images": {
+      "$imageId": {
+        ".read": "root.child('admins').child(auth.uid).exists()",
+        ".write": "root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['filename', 'originalName', 'path', 'url', 'size', 'type', 'entityType'])",
+        
+        "filename": {
+          ".validate": "newData.isString() && newData.val().length <= 255"
+        },
+        "originalName": {
+          ".validate": "newData.isString() && newData.val().length <= 255"
+        },
+        "path": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "url": {
+          ".validate": "newData.isString() && newData.val().length <= 500"
+        },
+        "size": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 10485760"
+        },
+        "type": {
+          ".validate": "newData.isString() && (newData.val() === 'image/jpeg' || newData.val() === 'image/png' || newData.val() === 'image/gif' || newData.val() === 'image/webp' || newData.val() === 'image/svg+xml')"
+        },
+        "width": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 10000"
+        },
+        "height": {
+          ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 10000"
+        },
+        "entityType": {
+          ".validate": "newData.isString() && (newData.val() === 'album' || newData.val() === 'card' || newData.val() === 'banner' || newData.val() === 'user' || newData.val() === 'admin' || newData.val() === 'stock')"
+        },
+        "entityId": {
+          ".validate": "newData.isString()"
+        },
+        "uploadedAt": {
+          ".validate": "newData.isNumber()"
+        },
+        "uploadedBy": {
+          ".validate": "newData.isString() && root.child('admins').child(newData.val()).exists()"
+        },
+        "metadata": {
+          ".validate": "newData.hasChildren()"
+        }
+      }
+    },
+    
+    "stats": {
+      ".read": "root.child('admins').child(auth.uid).exists()",
+      ".write": "root.child('admins').child(auth.uid).exists()",
+      "$statType": {
+        ".validate": "newData.hasChildren()"
+      }
+    },
+    
+    "metadata": {
+      ".read": "root.child('admins').child(auth.uid).exists()",
+      ".write": "root.child('admins').child(auth.uid).child('role').val() === 'super_admin'",
+      "$key": {
+        ".validate": "newData.hasChildren()"
+      }
+    }
+  }
+}

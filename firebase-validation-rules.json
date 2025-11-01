@@ -1,0 +1,598 @@
+{
+  "validationRules": {
+    "users": {
+      "required": ["firstName", "lastName", "email", "dateOfBirth", "country", "registrationDate"],
+      "fields": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "firstName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "pattern": "^[a-zA-ZÀ-ÿ\\s'-]+$"
+        },
+        "lastName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 50,
+          "pattern": "^[a-zA-ZÀ-ÿ\\s'-]+$"
+        },
+        "email": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+          "maxLength": 254
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "validation": "Must be a valid date in YYYY-MM-DD format"
+        },
+        "country": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100
+        },
+        "state": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "city": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "gender": {
+          "type": "string",
+          "enum": ["male", "female", "other", "prefer_not_to_say"]
+        },
+        "language": {
+          "type": "string",
+          "enum": ["en", "es", "fr", "de", "it", "pt"]
+        },
+        "points": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1000000
+        },
+        "cardsOwned": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z0-9_-]+$": {
+              "type": "boolean"
+            }
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "inactive", "suspended"]
+        }
+      }
+    },
+    "albums": {
+      "required": ["name", "description", "capacity"],
+      "fields": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "capacity": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 1000
+        },
+        "currentCount": {
+          "type": "number",
+          "minimum": 0
+        },
+        "image": {
+          "type": "string",
+          "pattern": "^https?://.*\\.(jpg|jpeg|png|gif|webp|svg)$",
+          "maxLength": 500
+        },
+        "category": {
+          "type": "string",
+          "enum": ["nature", "sports", "technology", "art", "history", "science", "fantasy", "adventure"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "inactive", "draft", "published"]
+        }
+      }
+    },
+    "cards": {
+      "required": ["cardId", "name", "description", "rarity", "points", "albumId"],
+      "fields": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "cardId": {
+          "type": "string",
+          "pattern": "^CARD_[A-Z0-9]{3,10}$",
+          "maxLength": 20
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "image": {
+          "type": "string",
+          "pattern": "^https?://.*\\.(jpg|jpeg|png|gif|webp|svg)$",
+          "maxLength": 500
+        },
+        "type": {
+          "type": "string",
+          "enum": ["character", "spell", "item", "weapon", "creature", "artifact"]
+        },
+        "rarity": {
+          "type": "string",
+          "enum": ["common", "rare", "epic", "legendary"]
+        },
+        "points": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "albumId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "position": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 1000
+        }
+      }
+    },
+    "stocks": {
+      "required": ["stockNumber", "name", "description", "rarity", "price", "currency"],
+      "fields": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "stockNumber": {
+          "type": "string",
+          "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "rarity": {
+          "type": "string",
+          "enum": ["common", "rare", "epic", "legendary"]
+        },
+        "price": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 10000
+        },
+        "currency": {
+          "type": "string",
+          "enum": ["USD", "EUR", "GBP"]
+        },
+        "image": {
+          "type": "string",
+          "pattern": "^https?://.*\\.(jpg|jpeg|png|gif|webp|svg)$",
+          "maxLength": 500
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "inactive", "out_of_stock"]
+        }
+      }
+    },
+    "banners": {
+      "required": ["title", "image"],
+      "fields": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "image": {
+          "type": "string",
+          "pattern": "^https?://.*\\.(jpg|jpeg|png|gif|webp|svg)$",
+          "maxLength": 500
+        },
+        "linkUrl": {
+          "type": "string",
+          "pattern": "^https?://.*$",
+          "maxLength": 500
+        },
+        "position": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "startDate": {
+          "type": "number",
+          "validation": "Must be a valid timestamp"
+        },
+        "endDate": {
+          "type": "number",
+          "validation": "Must be a valid timestamp and greater than startDate"
+        }
+      }
+    },
+    "sales": {
+      "required": ["userId", "userEmail", "purchaseDetails", "totalAmount"],
+      "fields": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "srNumber": {
+          "type": "number",
+          "minimum": 1
+        },
+        "userId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "userEmail": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        },
+        "purchaseDetails": {
+          "type": "object",
+          "patternProperties": {
+            "^item\\d+$": {
+              "type": "object",
+              "required": ["type", "name", "quantity", "price"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["album", "card", "packet", "stock"]
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "quantity": {
+                  "type": "number",
+                  "minimum": 1,
+                  "maximum": 100
+                },
+                "price": {
+                  "type": "number",
+                  "minimum": 0.01
+                },
+                "itemId": {
+                  "type": "string",
+                  "pattern": "^[a-zA-Z0-9_-]+$"
+                }
+              }
+            }
+          }
+        },
+        "totalAmount": {
+          "type": "number",
+          "minimum": 0.01,
+          "maximum": 100000
+        },
+        "currency": {
+          "type": "string",
+          "enum": ["USD", "EUR", "GBP"]
+        },
+        "paymentMethod": {
+          "type": "string",
+          "enum": ["credit_card", "debit_card", "paypal", "stripe", "bank_transfer"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "completed", "cancelled", "refunded"]
+        }
+      }
+    },
+    "redeemCodes": {
+      "required": ["code", "cardId", "type"],
+      "fields": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "code": {
+          "type": "string",
+          "pattern": "^[A-Z0-9]{6,20}$",
+          "minLength": 6,
+          "maxLength": 20
+        },
+        "cardId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "qrCode": {
+          "type": "string",
+          "maxLength": 10000
+        },
+        "type": {
+          "type": "string",
+          "enum": ["alphanumeric", "qr"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "used", "expired"]
+        },
+        "usedBy": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "expiresAt": {
+          "type": "number",
+          "validation": "Must be a valid timestamp in the future"
+        }
+      }
+    },
+    "admins": {
+      "required": ["name", "email", "role"],
+      "fields": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["super_admin", "admin", "moderator"]
+        },
+        "permissions": {
+          "type": "object",
+          "properties": {
+            "users": {
+              "type": "string",
+              "enum": ["read", "write", "delete"]
+            },
+            "albums": {
+              "type": "string",
+              "enum": ["read", "write", "delete"]
+            },
+            "cards": {
+              "type": "string",
+              "enum": ["read", "write", "delete"]
+            },
+            "stocks": {
+              "type": "string",
+              "enum": ["read", "write", "delete"]
+            },
+            "banners": {
+              "type": "string",
+              "enum": ["read", "write", "delete"]
+            },
+            "sales": {
+              "type": "string",
+              "enum": ["read"]
+            },
+            "codes": {
+              "type": "string",
+              "enum": ["read", "write", "delete"]
+            }
+          }
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "inactive", "suspended"]
+        }
+      }
+    },
+    "images": {
+      "required": ["filename", "originalName", "path", "url", "size", "type", "entityType"],
+      "fields": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "maxLength": 128
+        },
+        "filename": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9._-]+\\.(jpg|jpeg|png|gif|webp|svg)$",
+          "maxLength": 255
+        },
+        "originalName": {
+          "type": "string",
+          "maxLength": 255
+        },
+        "path": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https?://.*$",
+          "maxLength": 500
+        },
+        "size": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10485760
+        },
+        "type": {
+          "type": "string",
+          "enum": ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"]
+        },
+        "width": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "height": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "entityType": {
+          "type": "string",
+          "enum": ["album", "card", "banner", "user", "admin", "stock"]
+        },
+        "entityId": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        }
+      }
+    }
+  },
+  "customValidations": {
+    "users": {
+      "ageValidation": "dateOfBirth must represent an age between 13 and 120 years",
+      "emailUniqueness": "email must be unique across all users",
+      "cardsOwnedLimit": "cardsOwned cannot exceed 10000 entries"
+    },
+    "albums": {
+      "capacityValidation": "currentCount cannot exceed capacity",
+      "nameUniqueness": "name must be unique across all albums"
+    },
+    "cards": {
+      "cardIdUniqueness": "cardId must be unique across all cards",
+      "albumCapacity": "adding card to album cannot exceed album capacity",
+      "positionUniqueness": "position must be unique within the same album"
+    },
+    "stocks": {
+      "stockNumberUniqueness": "stockNumber must be unique across all stocks",
+      "priceValidation": "price must be greater than 0"
+    },
+    "banners": {
+      "dateValidation": "endDate must be greater than startDate",
+      "positionUniqueness": "position must be unique among active banners"
+    },
+    "sales": {
+      "totalAmountValidation": "totalAmount must equal sum of all purchaseDetails prices",
+      "userExists": "userId must reference an existing user"
+    },
+    "redeemCodes": {
+      "codeUniqueness": "code must be unique across all redeem codes",
+      "cardExists": "cardId must reference an existing card",
+      "expirationValidation": "expiresAt must be in the future when status is active"
+    },
+    "admins": {
+      "emailUniqueness": "email must be unique across all admins",
+      "rolePermissions": "permissions must match the assigned role level"
+    },
+    "images": {
+      "entityExists": "entityId must reference an existing entity of entityType",
+      "fileSizeLimit": "size cannot exceed 10MB",
+      "dimensionValidation": "width and height must be provided for raster images"
+    }
+  },
+  "indexRequirements": {
+    "users": [
+      "email",
+      "status",
+      "country",
+      "registrationDate",
+      ["country", "points"],
+      ["status", "lastLogin"]
+    ],
+    "albums": [
+      "name",
+      "status",
+      "category",
+      "createdAt",
+      ["status", "createdAt"],
+      ["category", "status"]
+    ],
+    "cards": [
+      "cardId",
+      "albumId",
+      "rarity",
+      "type",
+      ["albumId", "position"],
+      ["rarity", "points"],
+      ["albumId", "rarity"]
+    ],
+    "stocks": [
+      "stockNumber",
+      "status",
+      "rarity",
+      "price",
+      ["status", "rarity"],
+      ["rarity", "price"]
+    ],
+    "banners": [
+      "isActive",
+      "position",
+      "startDate",
+      "endDate",
+      ["isActive", "position"],
+      ["startDate", "endDate"]
+    ],
+    "sales": [
+      "userId",
+      "status",
+      "createdAt",
+      ["userId", "createdAt"],
+      ["status", "createdAt"]
+    ],
+    "redeemCodes": [
+      "code",
+      "cardId",
+      "status",
+      "usedBy",
+      ["cardId", "status"],
+      ["status", "createdAt"]
+    ],
+    "admins": [
+      "email",
+      "role",
+      "status",
+      ["role", "status"]
+    ],
+    "images": [
+      "entityType",
+      "entityId",
+      "uploadedAt",
+      ["entityType", "entityId"]
+    ]
+  }
+}

@@ -1,0 +1,504 @@
+@import "tailwindcss";
+
+/* Enhanced Light Mode Color Scheme - Optimized for Visibility and Usability */
+:root {
+  /* Primary Background Hierarchy */
+  --background: #ffffff;
+  --foreground: #0f172a;
+  --surface: #f8fafc;
+  --surface-elevated: #ffffff;
+  --card: #ffffff;
+  --card-hover: #f1f5f9;
+  
+  /* Enhanced Text Contrast */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  
+  /* Refined Border System */
+  --border: #e2e8f0;
+  --border-light: #f1f5f9;
+  --border-subtle: #cbd5e1;
+  
+  /* Vibrant Accent Palette */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-light: #3b82f6;
+  --accent-subtle: rgba(37, 99, 235, 0.1);
+  
+  /* Enhanced Status Colors */
+  --success: #059669;
+  --success-light: #10b981;
+  --warning: #d97706;
+  --warning-light: #f59e0b;
+  --error: #dc2626;
+  --error-light: #ef4444;
+  --info: #0284c7;
+  --info-light: #0ea5e9;
+  
+  /* Refined Shadow System */
+  --shadow: rgba(15, 23, 42, 0.08);
+  --shadow-light: rgba(15, 23, 42, 0.05);
+  --shadow-subtle: rgba(15, 23, 42, 0.03);
+  
+  /* Light Mode Gradients */
+  --gradient-primary: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  --gradient-surface: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+  --gradient-card: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Smooth transitions for enhanced user experience */
+* {
+  transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+              color 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+              border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Enhanced Card and Surface Styling */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px var(--shadow-light), 0 1px 2px var(--shadow-subtle);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0.5rem;
+}
+
+.card:hover {
+  background: var(--card-hover);
+  box-shadow: 0 4px 12px var(--shadow), 0 2px 4px var(--shadow-light);
+  transform: translateY(-1px);
+  border-color: var(--border-subtle);
+}
+
+.surface {
+  background: var(--surface);
+  border-radius: 0.5rem;
+}
+
+.surface-elevated {
+  background: var(--surface-elevated);
+  box-shadow: 0 2px 8px var(--shadow-light), 0 1px 3px var(--shadow-subtle);
+  border-radius: 1.5rem;
+}
+
+/* Enhanced Text Styling */
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Enhanced Border Styling */
+.border-theme {
+  border-color: var(--border);
+}
+
+.border-light {
+  border-color: var(--border-light);
+}
+
+.border-subtle {
+  border-color: var(--border-subtle);
+}
+
+/* Enhanced Accent Colors */
+.accent {
+  color: var(--accent);
+}
+
+.bg-accent {
+  background-color: var(--accent);
+}
+
+.bg-accent:hover {
+  background-color: var(--accent-hover);
+}
+
+.bg-accent-subtle {
+  background-color: var(--accent-subtle);
+}
+
+/* Enhanced Status Colors */
+.text-success {
+  color: var(--success);
+}
+
+.text-success-light {
+  color: var(--success-light);
+}
+
+.text-warning {
+  color: var(--warning);
+}
+
+.text-warning-light {
+  color: var(--warning-light);
+}
+
+.text-error {
+  color: var(--error);
+}
+
+.text-error-light {
+  color: var(--error-light);
+}
+
+.text-info {
+  color: var(--info);
+}
+
+.text-info-light {
+  color: var(--info-light);
+}
+
+.bg-success {
+  background-color: var(--success);
+}
+
+.bg-warning {
+  background-color: var(--warning);
+}
+
+.bg-error {
+  background-color: var(--error);
+}
+
+/* Enhanced Utility Classes */
+.text-muted-theme {
+  color: var(--text-muted);
+}
+
+.bg-surface-theme {
+  background-color: var(--surface);
+}
+
+.bg-surface-elevated-theme {
+  background-color: var(--surface-elevated);
+}
+
+.hover\:bg-surface-hover:hover {
+  background-color: var(--card-hover);
+}
+
+/* Interactive Card System */
+.interactive-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.interactive-card:hover {
+  background: var(--card-hover);
+  border-color: var(--border-subtle);
+  box-shadow: 0 4px 12px var(--shadow), 0 2px 4px var(--shadow-light);
+  transform: translateY(-1px);
+}
+
+/* Enhanced Shadow Classes */
+.shadow-theme {
+  box-shadow: 0 4px 16px var(--shadow), 0 2px 6px var(--shadow-light);
+}
+
+.shadow-theme-lg {
+  box-shadow: 0 8px 32px var(--shadow), 0 4px 12px var(--shadow-light);
+}
+
+.shadow-theme-xl {
+  box-shadow: 0 16px 48px var(--shadow), 0 8px 20px var(--shadow-light);
+}
+
+/* Enhanced Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  text-decoration: none;
+}
+
+.btn:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: 0 4px 12px var(--accent-subtle), 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--accent-hover), #1e40af);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px var(--accent-subtle), 0 4px 8px rgba(37, 99, 235, 0.3);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px var(--accent-subtle);
+}
+
+.btn-secondary {
+  background-color: var(--surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px var(--shadow-light);
+}
+
+.btn-secondary:hover {
+  background-color: var(--card-hover);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px var(--shadow), 0 2px 4px var(--shadow-light);
+}
+
+.btn-secondary:active {
+  transform: translateY(0);
+}
+
+.btn-neutral {
+  background-color: var(--surface);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.btn-neutral:hover {
+  background-color: var(--card-hover);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+/* Enhanced Success Button */
+.btn-success {
+  background: linear-gradient(135deg, var(--success), var(--success-light));
+  color: white;
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+}
+
+.btn-success:hover {
+  background: linear-gradient(135deg, #047857, var(--success));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(5, 150, 105, 0.4);
+}
+
+/* Enhanced Danger Button */
+.btn-danger {
+  background: linear-gradient(135deg, var(--error), var(--error-light));
+  color: white;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.btn-danger:hover {
+  background: linear-gradient(135deg, #b91c1c, var(--error));
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.4);
+}
+
+/* Button Size Variants */
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 1.25rem;
+}
+
+.btn-lg {
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  border-radius: 1.75rem;
+}
+
+/* Disabled State */
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Enhanced Form Styles */
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  background-color: var(--card);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.input-theme {
+  background-color: var(--card);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  transition: all 0.2s ease;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+}
+
+.input-theme:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.input-theme::placeholder {
+  color: var(--text-muted);
+}
+
+.label-theme {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Enhanced Table Styling */
+.table-theme {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+.table-theme thead {
+  background-color: var(--surface);
+}
+
+.table-theme th {
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border);
+  font-weight: 600;
+  padding: 1rem;
+}
+
+.table-theme td {
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-light);
+  padding: 1rem;
+}
+
+.table-theme tr:hover {
+  background-color: var(--card-hover);
+}
+
+/* Enhanced Modal Styles */
+.modal-overlay {
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 25px -5px var(--shadow), 0 10px 10px -5px var(--shadow-light);
+  border-radius: 1rem;
+}
+
+.overlay-theme {
+  background-color: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.modal-theme {
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 25px -5px var(--shadow), 0 10px 10px -5px var(--shadow-light);
+  border-radius: 1rem;
+}
+
+/* Enhanced Gradient Classes */
+.card-gradient {
+  background: var(--gradient-card);
+  border: 1px solid var(--border);
+  box-shadow: 0 4px 16px var(--shadow-light);
+  border-radius: 1.5rem;
+}
+
+.surface-gradient {
+  background: var(--gradient-surface);
+  border-radius: 0.5rem;
+}
+
+/* Enhanced Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--surface);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-subtle);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Focus and Accessibility Enhancements */
+.focus\:ring-accent:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+}
