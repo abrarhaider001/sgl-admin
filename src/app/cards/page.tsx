@@ -20,6 +20,7 @@ import {
 import MainLayout from '@/components/layout/MainLayout';
 import { useLanguage } from '@/context/LanguageContext';
 import ImageUpload from '@/components/ui/ImageUpload';
+import CardImagesUpload from '@/components/ui/CardImagesUpload';
 import { ImageUploadResult } from '@/services/imageService';
 
 import { 
@@ -29,6 +30,8 @@ import {
   PaginationOptions,
   CardValidationError
 } from '@/types/album';
+import type { CardImages } from '@/types/card';
+import type { CardImageVariant } from '@/components/ui/CardImagesUpload';
 import { CreateCardRequest, UpdateCardRequest } from '@/services/cardService';
 import { albumService } from '@/services/albumService';
 import { cardService } from '@/services/cardService';
@@ -302,6 +305,7 @@ const CardsPage = () => {
       rarity: 'common',
     });
     setImageUploadResult(null);
+    setImagesFiles({});
   };
 
 
@@ -319,6 +323,9 @@ const CardsPage = () => {
   const handleImageError = (error: string) => {
     console.error('Image upload error:', error);
   };
+
+  // Multi-variant image files state (for future Firebase integration)
+  const [imagesFiles, setImagesFiles] = useState<Partial<Record<CardImageVariant, File>>>({});
 
   const getAlbumName = (albumId: string) => {
     const album = albums.find((a: any) => a?.id === albumId || a?.albumId === albumId);
@@ -403,7 +410,7 @@ const CardsPage = () => {
                 <option value="all">{t('cards.allAlbums')} ({cards.length})</option>
                 {albums.map((album: any) => {
                   const aid = album?.id ?? album?.albumId;
-                  const albumCardCount = cards.filter(card => card.albumId === aid).length;
+                  const albumCardCount = cards.filter(card => (card as any).albumId === aid).length;
                   return (
                     <option key={aid} value={aid}>
                       {album.name} ({albumCardCount}/{album?.capacity ?? 0})
@@ -485,14 +492,14 @@ const CardsPage = () => {
         {viewMode === 'grid' ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {currentCards.map((card, index) => {
-              const keyVal = card.cardId ?? card.id ?? index;
+              const keyVal = card.cardId ?? index;
               return (
                 <div key={keyVal} className="card-hover group overflow-hidden">
                   {/* Card Image */}
                   <div className="relative h-48 bg-gradient-to-br from-surface-elevated to-surface overflow-hidden">
-                    {card.image ? (
+                    {(card as any).images?.bronze || card.image ? (
                       <Image 
-                        src={card.image} 
+                        src={((card as any).images?.bronze || card.image) as string} 
                         alt={card.name} 
                         fill
                         className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -609,9 +616,9 @@ const CardsPage = () => {
                         <td className="px-6 py-4">
                           <div className="flex items-center space-x-4">
                             <div className="relative h-12 w-12 flex-shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-surface-elevated to-surface">
-                              {card.image ? (
+                              {(card as any).images?.bronze || card.image ? (
                                 <Image 
-                                  src={card.image} 
+                                  src={((card as any).images?.bronze || card.image) as string} 
                                   alt={card.name} 
                                   width={48}
                                   height={48}
@@ -839,8 +846,8 @@ const CardsPage = () => {
       {/* Edit Card Modal */}
       {showEditModal && (
         <div className="fixed inset-0 bg-gray-100 bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl border border-gray-200 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-8">
+          <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-2xl border border-gray-200 max-w-7xl w-[95vw] overflow-hidden">
+            <div className="p-8 max-h-[92vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   {editingCard ? t('cards.editCard') : t('cards.addCard')}
@@ -855,9 +862,9 @@ const CardsPage = () => {
                 </button>
               </div>
               
-              <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* Card ID Field */}
-                <div>
+                <div className="md:col-span-2">
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Card ID</label>
                   {editingCard ? (
                     <div className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-50">
@@ -930,12 +937,12 @@ const CardsPage = () => {
                 </div>
                 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">{t('cards.imageUrl')}</label>
-                  <ImageUpload
-                    onChange={handleImageUpload}
-                    onError={handleImageError}
-                    value={imageUploadResult?.url}
-                    context="card"
+                  <label className="block text-sm font-semibold text-gray-700">{t('cards.cardImages')}</label>
+      <p className="text-xs text-gray-500 mb-2">{t('cards.uploadVariantsHelp')}</p>
+                  <CardImagesUpload
+                    value={(editingCard as any)?.images as Partial<CardImages>}
+                    onChange={setImagesFiles}
+                    className="w-full"
                   />
                 </div>
                 

@@ -16,10 +16,12 @@ import {
 } from 'react-icons/fi';
 import MainLayout from '@/components/layout/MainLayout';
 import ImageUpload from '@/components/ui/ImageUpload';
+import CardImagesUpload from '@/components/ui/CardImagesUpload';
 import Snackbar from '@/components/ui/Snackbar';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { Album } from '@/types/album';
-import type { Card, CreateCardRequest, UpdateCardRequest } from '@/types/card';
+import type { Card, CreateCardRequest, UpdateCardRequest, CardImages } from '@/types/card';
+import type { CardImageVariant } from '@/components/ui/CardImagesUpload';
 interface ImageUploadResult {
   url: string;
   path: string;
@@ -59,6 +61,7 @@ const AlbumCardsPage = () => {
     points: 10
   });
   const [imageUploadResult, setImageUploadResult] = useState<ImageUploadResult | null>(null);
+  const [imagesFiles, setImagesFiles] = useState<Partial<Record<CardImageVariant, File>>>({});
 
   // Snackbar hook
   const { snackbar, showSnackbar, hideSnackbar } = useSnackbar();
@@ -120,14 +123,24 @@ const AlbumCardsPage = () => {
         return;
       }
 
-      // Use uploaded image if available
+      // Use uploaded image(s) if available
       const cardData: CreateCardRequest = {
         ...formData,
         imageUrl: imageUploadResult?.url || formData.imageUrl || ''
       };
 
-      // Create the card
-      await firebaseCardService.createCard(cardData);
+      // If all five variants are provided, create with images; otherwise fallback to legacy single image
+      const requiredVariants: (keyof CardImages)[] = ['bronze', 'silver', 'gold', 'titanium', 'diamond'];
+      const hasAllVariants = requiredVariants.every(v => !!imagesFiles[v as CardImageVariant]);
+
+      if (hasAllVariants) {
+        await firebaseCardService.createCardWithImages(
+          cardData,
+          imagesFiles as { [key in keyof CardImages]: File }
+        );
+      } else {
+        await firebaseCardService.createCard(cardData);
+      }
 
       // Update album's cardIds array
       const updatedCardIds = [...(album?.cardIds || []), formData.cardID];
@@ -163,7 +176,16 @@ const AlbumCardsPage = () => {
         imageUrl: imageUploadResult?.url || formData.imageUrl
       };
 
-      await firebaseCardService.updateCard(editingCard.cardID, updates);
+      // If any variant files provided, update with images; else legacy update
+      if (Object.keys(imagesFiles).length > 0) {
+        await firebaseCardService.updateCardWithImages(
+          editingCard.cardID,
+          updates,
+          imagesFiles as { [key in keyof Partial<CardImages>]: File }
+        );
+      } else {
+        await firebaseCardService.updateCard(editingCard.cardID, updates);
+      }
       await loadAlbumAndCards();
 
       resetForm();
@@ -218,6 +240,7 @@ const AlbumCardsPage = () => {
       points: card.points
     });
     setImageUploadResult(null);
+    setImagesFiles({});
     setShowCreateModal(true);
   };
 
@@ -236,6 +259,7 @@ const AlbumCardsPage = () => {
     });
     setImageUploadResult(null);
     setEditingCard(null);
+    setImagesFiles({});
   };
 
   const handleImageUpload = (result: ImageUploadResult) => {
@@ -334,9 +358,9 @@ const AlbumCardsPage = () => {
                   onClick={() => router.push(`/codes?cardId=${card.cardID}`)}
                 >
                   <div className="aspect-square bg-gray-100 relative">
-                    {card.imageUrl ? (
+                    {(card.images?.bronze || card.imageUrl) ? (
                       <Image
-                        src={card.imageUrl}
+                        src={(card.images?.bronze || card.imageUrl) as string}
                         alt={card.name}
                         fill
                         className="object-cover"
@@ -387,8 +411,8 @@ const AlbumCardsPage = () => {
         {/* Create/Edit Card Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 bg-gray-100 bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-              <div className="p-6">
+            <div className="bg-white rounded-xl max-w-6xl w-[95vw] overflow-hidden border border-gray-200 shadow-2xl">
+              <div className="p-6 max-h-[92vh] overflow-y-auto">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold text-gray-900">
                     {editingCard ? t('cards.editCard') : t('cards.createCard')}
@@ -404,8 +428,8 @@ const AlbumCardsPage = () => {
                   </button>
                 </div>
 
-                {/* Two-column layout: fields on the left, image preview & upload on the right */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Two-column layout: fields on the left, image variants upload on the right */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {/* Left: Form Fields */}
                   <div className="space-y-4">
                     {/* Card ID */}
@@ -466,16 +490,18 @@ const AlbumCardsPage = () => {
                     </div>
                   </div>
 
-                  {/* Right: Image Upload with overlay directly on preview */}
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
-                      {t('cards.cardImage')}
-                    </label>
-                    <ImageUpload
-                      onChange={handleImageUpload}
-                      value={imageUploadResult?.url || formData.imageUrl}
-                      existingImageUrl={formData.imageUrl}
-                      context="card"
+                  {/* Right: Multi-variant Card Images Upload */}
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700">
+                        {t('cards.cardImages')}
+                      </label>
+        <p className="text-xs text-gray-500">{t('cards.uploadVariantsHelp')}</p>
+                    </div>
+                    <CardImagesUpload
+                      value={editingCard?.images}
+                      onChange={setImagesFiles}
+                      disabled={submitting}
                       className="w-full"
                     />
                   </div>

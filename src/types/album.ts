@@ -8,10 +8,19 @@ export interface Album {
   name: string;
 }
 
+export interface CardImages {
+  bronze: string;
+  silver: string;
+  gold: string;
+  titanium: string;
+  diamond: string;
+}
+
 export interface Card {
   cardId: string; // Unique card identifier
   description: string;
-  image: string; // Card image URL
+  image?: string; // Legacy single image URL (for backward compatibility)
+  images: CardImages; // New 5-image variants
   name: string;
   points: number; // Card point value
 }
@@ -43,7 +52,8 @@ export interface CreateCardRequest {
   name: string;
   description: string;
   points: number;
-  image?: string;
+  image?: string; // Legacy support
+  images?: Partial<CardImages>; // New 5-image variants (partial for flexibility during creation)
 }
 
 export interface UpdateCardRequest {
@@ -51,7 +61,8 @@ export interface UpdateCardRequest {
   name?: string;
   description?: string;
   points?: number;
-  image?: string;
+  image?: string; // Legacy support
+  images?: Partial<CardImages>; // Allow updating individual image variants
 }
 
 // Filter and search interfaces

@@ -1,13 +1,22 @@
 // Card Service - Real API Implementation
 // Handles all card-related API calls
 
+export interface CardImages {
+  bronze: string;
+  silver: string;
+  gold: string;
+  titanium: string;
+  diamond: string;
+}
+
 export interface Card {
   id: string;
   cardId: string;
   name: string;
   description: string;
   points: number;
-  image?: string;
+  image?: string; // Legacy single image (for backward compatibility)
+  images?: CardImages; // New 5-image variants
   createdAt?: string;
   updatedAt?: string;
 }
@@ -32,7 +41,8 @@ export interface CreateCardRequest {
   name: string;
   description: string;
   points: number;
-  image?: string;
+  image?: string; // Legacy support
+  images?: Partial<CardImages>; // New 5-image variants (partial for flexibility during creation)
 }
 
 export interface UpdateCardRequest {
@@ -40,7 +50,8 @@ export interface UpdateCardRequest {
   name?: string;
   description?: string;
   points?: number;
-  image?: string;
+  image?: string; // Legacy support
+  images?: Partial<CardImages>; // Allow updating individual image variants
 }
 
 export interface CardFilters {
