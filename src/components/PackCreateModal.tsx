@@ -5,6 +5,7 @@ import ImageUpload from '@/components/ui/ImageUpload';
 import { ImageUploadResult } from '@/services/imageService';
 import { Album } from '@/types/album';
 import { firebaseAlbumService } from '@/services/firebaseAlbumService';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface Props {
   open: boolean;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 const initial: CreatePackRequest = {
+  packId: '',
   description: '',
   image: '',
   isFeatured: false,
@@ -27,6 +29,7 @@ export default function PackCreateModal({ open, onClose }: Props) {
   const [saving, setSaving] = useState(false);
   const [imageUploadResult, setImageUploadResult] = useState<ImageUploadResult | null>(null);
   const [albums, setAlbums] = useState<Album[]>([]);
+  const { t } = useLanguage();
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -59,6 +62,17 @@ export default function PackCreateModal({ open, onClose }: Props) {
   const handleSave = async () => {
     try {
       setSaving(true);
+      // Basic validation: ensure packId is provided so document ID matches packId
+      const pid = (form.packId || '').trim();
+      if (!pid) {
+        alert(t('store.packIdRequired'));
+        return;
+      }
+      // Prevent illegal Firestore path characters
+      if (pid.includes('/')) {
+        alert(t('store.packIdInvalidChars'));
+        return;
+      }
       await firebasePackService.createPack(form);
       onClose();
       setForm(initial);
@@ -76,11 +90,15 @@ export default function PackCreateModal({ open, onClose }: Props) {
     <div className="fixed inset-0 bg-gray-100 bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl p-6 w-full max-w-lg">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Create Pack</h2>
+          <h2 className="text-lg font-semibold">{t('store.createPack')}</h2>
           <button onClick={onClose} className="text-gray-500">✕</button>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-sm text-gray-600">{t('store.packId')}</label>
+            <input name="packId" value={form.packId || ''} onChange={handleChange} className="w-full border rounded px-3 py-2" />
+          </div>
           <div>
             <label className="text-sm text-gray-600">Name</label>
             <input name="name" value={form.name} onChange={handleChange} className="w-full border rounded px-3 py-2" />
@@ -133,8 +151,8 @@ export default function PackCreateModal({ open, onClose }: Props) {
         </div>
 
         <div className="flex gap-3 mt-6">
-          <button onClick={handleSave} disabled={saving} className="flex-1 bg-blue-600 text-white rounded py-2 disabled:opacity-50">Save</button>
-          <button onClick={onClose} className="flex-1 bg-gray-100 text-gray-700 rounded py-2">Cancel</button>
+          <button onClick={handleSave} disabled={saving} className="flex-1 bg-blue-600 text-white rounded py-2 disabled:opacity-50">{t('app.save')}</button>
+          <button onClick={onClose} className="flex-1 bg-gray-100 text-gray-700 rounded py-2">{t('app.cancel')}</button>
         </div>
       </div>
     </div>

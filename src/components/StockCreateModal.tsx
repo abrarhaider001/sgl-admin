@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { X, Upload, Package, DollarSign, FileText, Tag, Globe } from 'lucide-react';
 import { CreateStockRequest, StockFormData, StockFormErrors } from '@/types/stock';
 import { stockService } from '@/services/stockService';
+import { useLanguage } from '@/context/LanguageContext';
 
 interface StockCreateModalProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface StockCreateModalProps {
 }
 
 export default function StockCreateModal({ isOpen, onClose, onSuccess }: StockCreateModalProps) {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState<StockFormData>({
     stockNumber: '',
     name: '',
@@ -177,7 +179,7 @@ export default function StockCreateModal({ isOpen, onClose, onSuccess }: StockCr
       onClose();
     } catch (error) {
       console.error('Error creating stock:', error);
-      setErrors({ name: 'Failed to create pack. Please try again.' });
+      setErrors({ name: t('store.failedCreatePack') });
     } finally {
       setLoading(false);
     }
@@ -213,7 +215,7 @@ export default function StockCreateModal({ isOpen, onClose, onSuccess }: StockCr
             <div className="p-2 bg-blue-100 rounded-lg">
               <Package className="w-6 h-6 text-blue-600" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Create New Pack</h2>
+            <h2 className="text-xl font-semibold text-gray-900">{t('store.createPack')}</h2>
           </div>
           <button
             onClick={handleClose}
@@ -503,14 +505,14 @@ export default function StockCreateModal({ isOpen, onClose, onSuccess }: StockCr
               disabled={loading}
               className="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
             >
-              Cancel
+              {t('app.cancel')}
             </button>
             <button
               type="submit"
               disabled={loading}
               className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? 'Creating...' : 'Create Pack'}
+              {loading ? t('app.loading') : t('app.create')}
             </button>
           </div>
         </form>
