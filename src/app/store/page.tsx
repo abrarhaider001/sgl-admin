@@ -6,6 +6,7 @@ import { FiSearch } from 'react-icons/fi';
 import MainLayout from '@/components/layout/MainLayout';
 import PackCreateModal from '@/components/PackCreateModal';
 import PackEditModal from '@/components/PackEditModal';
+import SingleCardPriceModal from '@/components/SingleCardPriceModal';
 import { Pack } from '@/types/pack';
 import firebasePackService, { PackStats, PackFilters } from '@/services/firebasePackService';
 import { firebaseAlbumService } from '@/services/firebaseAlbumService';
@@ -20,6 +21,7 @@ const StorePage = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [showPriceModal, setShowPriceModal] = useState(false);
   const [selectedStock, setSelectedStock] = useState<Pack | null>(null);
   const [linkedAlbumName, setLinkedAlbumName] = useState<string>('');
   const [linkedAlbumImage, setLinkedAlbumImage] = useState<string>('');
@@ -129,13 +131,22 @@ const StorePage = () => {
             <h1 className="text-3xl font-bold text-gray-900">{t('store.title')}</h1>
             <p className="text-gray-600 mt-1">{t('store.subtitle')}</p>
           </div>
-          <button
-            onClick={() => setShowCreateModal(true)}
-            className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <Plus className="w-5 h-5" />
-            {t('store.addPack')}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowPriceModal(true)}
+              className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+            >
+              <DollarSign className="w-5 h-5" />
+              {t('store.singleCardPrice')}
+            </button>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <Plus className="w-5 h-5" />
+              {t('store.addPack')}
+            </button>
+          </div>
         </div>
 
         {/* Statistics Cards */}
@@ -323,6 +334,7 @@ const StorePage = () => {
       {/* Modals */}
       <PackCreateModal open={showCreateModal} onClose={() => setShowCreateModal(false)} />
       <PackEditModal open={showEditModal} pack={selectedStock} onClose={() => setShowEditModal(false)} />
+      <SingleCardPriceModal open={showPriceModal} onClose={() => setShowPriceModal(false)} />
 
       {showDetailsModal && selectedStock && (
         <div className="fixed inset-0 bg-gray-100 bg-opacity-50 flex items-center justify-center z-50">

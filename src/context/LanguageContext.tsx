@@ -403,6 +403,8 @@ const translations = {
     'store.noPacksFound': 'No packs found',
     'store.tryAdjustingSearch': 'Try adjusting your search',
     'store.getStartedAddPack': 'Get started by adding your first pack to the inventory.',
+    'store.singleCardPrice': 'Single Card Price',
+    'store.singleCardPriceDesc': 'Set price per individual card.',
     
     // Cards
     'cards.title': 'Card Management',
@@ -1070,6 +1072,8 @@ const translations = {
     'store.noPacksFound': 'No se encontraron paquetes',
     'store.tryAdjustingSearch': 'Intenta ajustar tu búsqueda',
     'store.getStartedAddPack': 'Comienza agregando tu primer paquete al inventario.',
+    'store.singleCardPrice': 'Precio por Carta',
+    'store.singleCardPriceDesc': 'Establece el precio por carta individual.',
     
     // Cards
     'cards.title': 'Gestión de Tarjetas',
