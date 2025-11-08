@@ -54,8 +54,16 @@ export default function PackEditModal({ open, pack, onClose }: Props) {
   if (!open || !pack) return null;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: name === 'price' ? Number(value) : value }));
+    const target = e.target as HTMLInputElement | HTMLSelectElement;
+    const { name } = target as { name: keyof UpdatePackRequest };
+    const value = (target as HTMLInputElement).type === 'checkbox'
+      ? (target as HTMLInputElement).checked
+      : (name === 'price' ? Number((target as HTMLInputElement).value) : (target as HTMLInputElement).value);
+
+    setForm((f) => ({
+      ...f,
+      [name]: value as any,
+    }));
   };
 
   const handleSave = async () => {
@@ -101,6 +109,17 @@ export default function PackEditModal({ open, pack, onClose }: Props) {
               <option value="epic">Epic</option>
               <option value="legendary">Legendary</option>
             </select>
+          </div>
+          <div className="flex items-center gap-2 col-span-2">
+            <input
+              id="isFeatured"
+              name="isFeatured"
+              type="checkbox"
+              checked={!!form.isFeatured}
+              onChange={handleChange}
+              className="h-4 w-4 border rounded"
+            />
+            <label htmlFor="isFeatured" className="text-sm text-gray-700">Featured</label>
           </div>
           <div className="col-span-2">
             <label className="text-sm text-gray-600">Linked Album</label>
