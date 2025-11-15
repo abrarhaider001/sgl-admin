@@ -470,7 +470,7 @@ const AlbumsPage = () => {
                     <ImageUpload
                       onChange={handleImageUpload}
                       onError={(error) => setError(error)}
-                      existingImageUrl={imageUploadResult?.url}
+                      existingImageUrl={imageUploadResult?.url || formData.image || ''} 
                       context="album"
                       className="w-full"
                     />

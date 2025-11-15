@@ -54,13 +54,34 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [retryCount, setRetryCount] = useState(0);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  // Track the latest file selection to avoid race conditions
+  const selectionIdRef = useRef(0);
+  // Keep a blob URL reference to revoke when replaced/unmounted
+  const blobUrlRef = useRef<string | null>(null);
+  // Store progress interval for cleanup across selections
+  const progressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Update preview when value changes
   useEffect(() => {
-    const initial = value ?? existingImageUrl ?? null;
+    const normalize = (v?: string) => (v && v.trim().length > 0 ? v : null);
+    const initial = normalize(value) ?? normalize(existingImageUrl) ?? null;
     setPreview(initial);
     setUploadSuccess(!!initial);
   }, [value, existingImageUrl]);
+
+  // Cleanup any blob preview URLs and active intervals when unmounting
+  useEffect(() => {
+    return () => {
+      if (blobUrlRef.current) {
+        URL.revokeObjectURL(blobUrlRef.current);
+        blobUrlRef.current = null;
+      }
+      if (progressIntervalRef.current) {
+        clearInterval(progressIntervalRef.current);
+        progressIntervalRef.current = null;
+      }
+    };
+  }, []);
 
   // Get context-specific options
   const uploadOptions = options || imageService.getOptionsForContext(context);
@@ -121,11 +142,32 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       return;
     }
 
+    // Increment selection id to guard against races
+    selectionIdRef.current += 1;
+    const selectionId = selectionIdRef.current;
+
+    // Revoke previous blob preview if present
+    if (blobUrlRef.current) {
+      URL.revokeObjectURL(blobUrlRef.current);
+      blobUrlRef.current = null;
+    }
+
     // Create preview immediately for better UX
     if (showPreview) {
       try {
-        const previewUrl = await imageService.createPreview(file);
-        setPreview(previewUrl);
+        if (file.size > (2 * 1024 * 1024)) {
+          // Use blob URL for large files to avoid heavy base64 strings
+          const blobUrl = URL.createObjectURL(file);
+          blobUrlRef.current = blobUrl;
+          if (selectionId === selectionIdRef.current) {
+            setPreview(blobUrl);
+          }
+        } else {
+          const previewUrl = await imageService.createPreview(file);
+          if (selectionId === selectionIdRef.current) {
+            setPreview(previewUrl);
+          }
+        }
       } catch (err) {
         console.warn('Failed to create preview:', err);
       }
@@ -134,7 +176,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const attemptUpload = async (attempt: number = 1): Promise<void> => {
     try {
         // Simulate upload progress
-        const progressInterval = setInterval(() => {
+                if (progressIntervalRef.current) {
+          clearInterval(progressIntervalRef.current);
+          progressIntervalRef.current = null;
+        }
+        progressIntervalRef.current = setInterval(() => {
           setProgress(prev => {
             const newProgress = Math.min(prev + Math.random() * 15, 90);
             if (typeof onProgress === 'function') onProgress(newProgress);
@@ -145,7 +191,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         // Upload the image
         const result = await imageService.uploadImage(file, uploadOptions, context, entityId);
         
-        clearInterval(progressInterval);
+        if (progressIntervalRef.current) { clearInterval(progressIntervalRef.current); progressIntervalRef.current = null; }
         setProgress(100);
         if (typeof onProgress === 'function') onProgress(100);
         
@@ -294,7 +340,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               />
               
               {/* Overlay with actions */}
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-200 flex items-center justify-center">
+              <div className="absolute inset-0 bg-transparent group-hover:bg-black/40 transition-all duration-200 flex items-center justify-center">
                 <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex space-x-2">
                   <button
                     type="button"
@@ -426,3 +472,5 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 };
 
 export default ImageUpload;
+
+

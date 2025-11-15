@@ -504,11 +504,12 @@ const BannersPage = () => {
                 <div>
                   <label className="block text-sm font-semibold text-gray-700 mb-2">Banner Image</label>
                   <ImageUpload
-                    value={bannerForm.image}
+                    value={bannerForm.image || ''} 
+                    existingImageUrl={currentBanner?.image || bannerForm.image || ''} 
                     context="banner"
-                    onChange={(result) => setBannerForm(prev => ({ ...prev, image: result?.url || '' }))}
-                    showPreview
-                    dragAndDrop
+                    onChange={(result) =>
+                      setBannerForm(prev => ({ ...prev, image: result?.url || '' }))
+                    }
                   />
                 </div>
                 
