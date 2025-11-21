@@ -58,7 +58,8 @@ const AlbumCardsPage = () => {
     name: '',
     description: '',
     imageUrl: '',
-    points: 10
+    points: 10,
+    isLocked: false
   });
   const [imageUploadResult, setImageUploadResult] = useState<ImageUploadResult | null>(null);
   const [imagesFiles, setImagesFiles] = useState<Partial<Record<CardImageVariant, File>>>({});
@@ -173,7 +174,8 @@ const AlbumCardsPage = () => {
         name: formData.name,
         description: formData.description,
         points: formData.points,
-        imageUrl: imageUploadResult?.url || formData.imageUrl
+        imageUrl: imageUploadResult?.url || formData.imageUrl,
+        isLocked: formData.isLocked
       };
 
       // If any variant files provided, update with images; else legacy update
@@ -237,7 +239,8 @@ const AlbumCardsPage = () => {
       name: card.name,
       description: card.description,
       imageUrl: card.imageUrl,
-      points: card.points
+      points: card.points,
+      isLocked: card.isLocked ?? false
     });
     setImageUploadResult(null);
     setImagesFiles({});
@@ -255,7 +258,8 @@ const AlbumCardsPage = () => {
       name: '',
       description: '',
       imageUrl: '',
-      points: 10
+      points: 10,
+      isLocked: false
     });
     setImageUploadResult(null);
     setEditingCard(null);
@@ -487,6 +491,30 @@ const AlbumCardsPage = () => {
                         min="0"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       />
+                    </div>
+
+                    {/* Distribution / Lock Toggle */}
+                    <div className="mt-6  p-4 bg-gray-50">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm font-semibold text-gray-700">{t('cards.distribution')}</p>
+                          <p className="text-xs text-gray-500 mt-1">{t('cards.lockCardHelp')}</p>
+                        </div>
+                        <label className="inline-flex items-center cursor-pointer select-none">
+                          <input
+                            type="checkbox"
+                            checked={!!formData.isLocked}
+                            onChange={(e) => setFormData({ ...formData, isLocked: e.target.checked })}
+                            className="sr-only"
+                          />
+                          <span className={`w-10 h-6 flex items-center rounded-full p-1 transition-colors ${formData.isLocked ? 'bg-green-500' : 'bg-blue-600'}`}>
+                            <span className={`bg-white w-4 h-4 rounded-full shadow transform transition-transform ${formData.isLocked ? 'translate-x-4' : 'translate-x-0'}`}></span>
+                          </span>
+                        </label>
+                      </div>
+                      <div className="mt-2 text-sm text-gray-700">
+                        {t('cards.lockCard')}
+                      </div>
                     </div>
                   </div>
 

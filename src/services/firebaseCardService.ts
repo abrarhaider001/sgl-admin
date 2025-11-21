@@ -18,8 +18,7 @@ import { db, auth } from '@/lib/firebase';
 import { notifySuccess, notifyError } from '@/utils/snackbarBus';
 import { Card, CardImages, CreateCardRequest, UpdateCardRequest } from '@/types/card';
 import CardImageService from './cardImageService';
-import { toast } from 'react-hot-toast';
-import { getCurrentUser } from '@/lib/auth';
+
 
 export class FirebaseCardService {
   private collectionName = 'cards';
@@ -39,7 +38,8 @@ export class FirebaseCardService {
           imageUrl: data.imageUrl, // Legacy support
           images: data.images, // New 5-image variants
           name: data.name,
-          points: data.points
+          points: data.points,
+          isLocked: data.isLocked ?? false
         } as Card;
       });
     } catch (error) {
@@ -68,7 +68,8 @@ export class FirebaseCardService {
           imageUrl: data.imageUrl, // Legacy support
           images: data.images, // New 5-image variants
           name: data.name,
-          points: data.points
+          points: data.points,
+          isLocked: data.isLocked ?? false
         } as Card;
       });
     } catch (error) {
@@ -97,7 +98,8 @@ export class FirebaseCardService {
         imageUrl: data.imageUrl, // Legacy support
         images: data.images, // New 5-image variants
         name: data.name,
-        points: data.points
+        points: data.points,
+        isLocked: data.isLocked ?? false
       } as Card;
     } catch (error) {
       console.error('Error fetching card:', error);
@@ -316,7 +318,8 @@ export class FirebaseCardService {
           imageUrl: data.imageUrl, // Legacy support
           images: data.images, // New 5-image variants
           name: data.name,
-          points: data.points
+          points: data.points,
+          isLocked: data.isLocked ?? false
         } as Card;
       });
 

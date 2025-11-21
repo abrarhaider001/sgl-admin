@@ -14,6 +14,7 @@ export interface Card {
   images?: CardImages; // New 5-image variants
   name: string;
   points: number;
+  isLocked?: boolean;
 }
 
 export interface CreateCardRequest {
@@ -23,6 +24,7 @@ export interface CreateCardRequest {
   images?: Partial<CardImages>; // New 5-image variants (partial for flexibility during creation)
   name: string;
   points: number;
+  isLocked?: boolean;
 }
 
 export interface UpdateCardRequest {
@@ -32,4 +34,5 @@ export interface UpdateCardRequest {
   images?: Partial<CardImages>; // Allow updating individual image variants
   name?: string;
   points?: number;
+  isLocked?: boolean;
 }
