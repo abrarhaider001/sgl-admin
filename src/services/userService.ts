@@ -505,9 +505,10 @@ class UserService {
           const base = docSnap.data() as any;
           const cardsRef = collection(db, this.COLLECTION_NAME, docSnap.id, this.CARDS_SUBCOLLECTION);
           const cardsSnap = await getDocs(cardsRef);
+          console.log('cardsSnap.docs:', cardsSnap.docs);
           const cardsOwned: UserCard[] = cardsSnap.docs.map(d => ({
-            cardId: String(d.data().cardId || ''),
-            quantity: Number(d.data().quantity || 0),
+            cardId: String(d.data().cardId || d.id),
+            quantity: Number(d.data().quantity || 1),
             timestamp: String(d.data().timestamp || new Date().toISOString()),
           }));
           usersWithCards.push({
