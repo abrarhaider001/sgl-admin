@@ -1,65 +1,59 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { userService } from '@/services/userService';
+import { adminAuth, adminDb } from '@/lib/firebase-admin';
 
-// GET /api/users/[id] - fetch single user
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const { id } = params;
-    if (!id) {
-      return NextResponse.json({ success: false, error: 'User ID is required' }, { status: 400 });
-    }
-    const user = await userService.getUserById(id);
-    if (!user) {
-      return NextResponse.json({ success: false, error: 'User not found' }, { status: 404 });
-    }
-    return NextResponse.json({ success: true, user });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
-
-// PUT /api/users/[id] - update user
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const { id } = params;
-    const body = await request.json();
-    const result = await userService.updateUser(id, body);
-    if (result.success) {
-      return NextResponse.json({ success: true });
-    }
-    return NextResponse.json({ success: false, error: result.error }, { status: 400 });
-  } catch (error) {
-    return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : 'Internal server error' },
-      { status: 500 }
-    );
-  }
-}
-
-// DELETE /api/users/[id] - delete user
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params;
-    const result = await userService.deleteUser(id);
-    if (result.success) {
-      return NextResponse.json({ success: true });
+    const { id } = await params;
+    if (!id || typeof id !== 'string') {
+      return NextResponse.json(
+        { success: false, error: 'Invalid user id' },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({ success: false, error: result.error }, { status: 400 });
-  } catch (error) {
+
+    let deletedDoc = false;
+    let deletedAuth = false;
+
+    try {
+      const userRef = adminDb.collection('users').doc(id);
+      const cardsRef = userRef.collection('cardsOwned');
+      const cardDocs = await cardsRef.listDocuments();
+      if (cardDocs.length) {
+        await Promise.all(cardDocs.map((d) => d.delete()));
+      }
+      await userRef.delete();
+      deletedDoc = true;
+    } catch (e: any) {
+      const msg = String(e?.message || '');
+      if (!msg.toLowerCase().includes('not found')) {
+        console.warn('Firestore user delete warning:', msg);
+      }
+    }
+
+    try {
+      await adminAuth.deleteUser(id);
+      deletedAuth = true;
+    } catch (e: any) {
+      const code = String(e?.code || '');
+      if (code === 'auth/user-not-found') {
+        deletedAuth = false;
+      } else {
+        const msg = String(e?.message || 'Failed to delete auth user');
+        return NextResponse.json(
+          { success: false, deletedDoc, deletedAuth, error: msg },
+          { status: 500 }
+        );
+      }
+    }
+
+    return NextResponse.json({ success: true, deletedDoc, deletedAuth });
+  } catch (error: any) {
+    const msg = String(error?.message || 'Internal server error');
     return NextResponse.json(
-      { success: false, error: error instanceof Error ? error.message : 'Internal server error' },
+      { success: false, error: msg },
       { status: 500 }
     );
   }

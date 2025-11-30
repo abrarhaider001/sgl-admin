@@ -150,16 +150,16 @@ export default function UsersPage() {
     if (!userToDelete) return;
     try {
       setLoading(true);
-      const result = await userService.deleteUser(userToDelete.id);
-      if (result.success) {
-        // Remove from local state after successful Firebase deletion
+      const resp = await fetch(`/api/users/${userToDelete.id}`, { method: 'DELETE' });
+      const result = await resp.json();
+      if (resp.ok && result.success) {
         setUsers(prev => prev.filter(u => u.id !== userToDelete.id));
         setShowDeleteModal(false);
         setUserToDelete(null);
         showSnackbar(t('users.deleteSuccess'), 'success');
       } else {
-        // Show error snackbar if deletion failed
-        showSnackbar(result.error || t('users.deleteFailed'), 'error');
+        const errMsg = String(result?.error || t('users.deleteFailed'));
+        showSnackbar(errMsg, 'error');
       }
     } catch (error) {
       console.error('Error deleting user:', error);

@@ -1172,6 +1172,13 @@ const SalesPage = () => {
       result = result.filter((s) => s.price <= max);
     }
 
+    // Exclude rows where username is unknown, or referrer name is unknown
+    const isKnownName = (id: string) => {
+      const n = (userCache.get(id) || '').trim();
+      return n.length > 0;
+    };
+    result = result.filter((s) => isKnownName(s.userId) && (!s.refererId || isKnownName(s.refererId)));
+
     // Sorting (pinned items first, then chosen sort key)
     result.sort((a, b) => {
       const dir = sortDir === 'asc' ? 1 : -1;
@@ -1310,13 +1317,14 @@ const SalesPage = () => {
   const referrerOptions = useMemo(() => {
     const uniq = new Set<string>();
     sales.forEach((s) => { if (s.refererId) uniq.add(s.refererId); });
-    const opts = [
+    const known = [...uniq]
+      .map((id) => ({ id, name: (userCache.get(id) || '').trim() }))
+      .filter((opt) => opt.name.length > 0);
+    const base = [
       { id: '', name: t('sales.allReferrers') },
       { id: NO_REFERRER, name: t('sales.noReferrer') },
-      ...[...uniq].map((id) => ({ id, name: userCache.get(id) || t('sales.unknownUser') }))
     ];
-    // Sort by name, keep All at top
-    return [opts[0], ...opts.slice(1).sort((a, b) => a.name.localeCompare(b.name))];
+    return [...base, ...known.sort((a, b) => a.name.localeCompare(b.name))];
   }, [sales, userCache, nameCacheTick]);
 
   // Delete selected sales with confirmation and audit log
@@ -1394,8 +1402,8 @@ const SalesPage = () => {
     const exportData = filteredSales.map((sale, idx) => ({
       [t('sales.header.sr')]: idx + 1,
       [t('sales.header.saleId')]: sale.saleId,
-      [t('sales.header.username')]: userCache.get(sale.userId) || t('sales.unknownUser'),
-      [t('sales.header.refererName')]: sale.refererId ? (userCache.get(sale.refererId) || t('sales.unknownUser')) : t('sales.noReferrer'),
+      [t('sales.header.username')]: userCache.get(sale.userId) || '',
+      [t('sales.header.refererName')]: sale.refererId ? (userCache.get(sale.refererId) || '') : t('sales.noReferrer'),
       [t('sales.header.createdAt')]: formatDate(sale.createdAt),
       [t('sales.header.price')]: sale.price,
     }));
@@ -1413,8 +1421,8 @@ const SalesPage = () => {
     const exportData = filteredSales.map((sale, idx) => ({
       [t('sales.header.sr')]: idx + 1,
       [t('sales.header.saleId')]: sale.saleId,
-      [t('sales.header.username')]: userCache.get(sale.userId) || t('sales.unknownUser'),
-      [t('sales.header.refererName')]: sale.refererId ? (userCache.get(sale.refererId) || t('sales.unknownUser')) : t('sales.noReferrer'),
+      [t('sales.header.username')]: userCache.get(sale.userId) || '',
+      [t('sales.header.refererName')]: sale.refererId ? (userCache.get(sale.refererId) || '') : t('sales.noReferrer'),
       [t('sales.header.createdAt')]: formatDate(sale.createdAt),
       [t('sales.header.price')]: sale.price,
     }));
@@ -1500,7 +1508,7 @@ const SalesPage = () => {
 
   // Resolve user names with caching
   const getUserName = async (id: string): Promise<string> => {
-    if (!id) return t('sales.unknownUser');
+    if (!id) return '';
     const cached = userCache.get(id);
     if (cached) return cached;
     setResolvingIds((prev) => {
@@ -1512,17 +1520,17 @@ const SalesPage = () => {
     try {
       const snap = await getDoc(doc(db, 'users', id));
       if (!snap.exists()) {
-        userCache.set(id, t('sales.unknownUser'));
-        return t('sales.unknownUser');
+        userCache.set(id, '');
+        return '';
       }
       const data = snap.data() as any;
-      const name = data.name || `${data.firstName || ''} ${data.lastName || ''}`.trim() || data.email || t('sales.unknownUser');
+      const name = data.name || `${data.firstName || ''} ${data.lastName || ''}`.trim() || data.email || '';
       userCache.set(id, name);
       return name;
     } catch (e) {
       console.error('Failed to resolve user name for', id, e);
-      userCache.set(id, t('sales.unknownUser'));
-      return t('sales.unknownUser');
+      userCache.set(id, '');
+      return '';
     } finally {
       setResolvingIds((prev) => {
         const next = new Set(prev);
@@ -1857,18 +1865,13 @@ const SalesPage = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
-                          {resolvingIds.has(sale.userId) ? t('sales.resolving') : ''}
-                          {!resolvingIds.has(sale.userId) && (
-                            <AsyncName id={sale.userId} getUserName={getUserName} />
-                          )}
+                          <AsyncName id={sale.userId} getUserName={getUserName} />
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
                           {sale.refererId ? (
-                            resolvingIds.has(sale.refererId) ? t('sales.resolving') : (
-                              <AsyncName id={sale.refererId} getUserName={getUserName} />
-                            )
+                            <AsyncName id={sale.refererId} getUserName={getUserName} />
                           ) : (
                             t('sales.noReferrer')
                           )}
@@ -1955,8 +1958,7 @@ export default SalesPage;
 
 // Lightweight component to display names with async resolution
 function AsyncName({ id, getUserName }: { id: string; getUserName: (id: string) => Promise<string> }) {
-  const { t } = useLanguage();
-  const [name, setName] = React.useState<string>(t('sales.resolving'));
+  const [name, setName] = React.useState<string>('');
   useEffect(() => {
     let mounted = true;
     getUserName(id).then((n) => {
