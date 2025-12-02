@@ -986,6 +986,8 @@ const SalesPage = () => {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [actionLoading, setActionLoading] = useState<boolean>(false);
   const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [showRevenueModal, setShowRevenueModal] = useState<boolean>(false);
+  const [revenuePercent, setRevenuePercent] = useState<number>(10);
   
   // Filter states
   const [filters, setFilters] = useState({
@@ -1172,8 +1174,10 @@ const SalesPage = () => {
       result = result.filter((s) => s.price <= max);
     }
 
-    // Exclude rows where username is unknown, or referrer name is unknown
+    // Exclude rows only when we've resolved names and found them unknown
     const isKnownName = (id: string) => {
+      if (!id) return false;
+      if (!userCache.has(id)) return true; // not resolved yet, include
       const n = (userCache.get(id) || '').trim();
       return n.length > 0;
     };
@@ -1208,6 +1212,10 @@ const SalesPage = () => {
   const currentSales = filteredSales.slice(indexOfFirstSale, indexOfLastSale);
   const totalPages = Math.ceil(filteredSales.length / salesPerPage) || 1;
   const allCurrentSelected = useMemo(() => currentSales.every((s) => selectedIds.has(s.id)) && currentSales.length > 0, [currentSales, selectedIds]);
+  const totalReferrerSales = useMemo(() => {
+    if (!referrerFilter || referrerFilter === NO_REFERRER) return 0;
+    return filteredSales.reduce((sum, s) => sum + s.price, 0);
+  }, [filteredSales, referrerFilter]);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -1591,6 +1599,15 @@ const SalesPage = () => {
 
           {/* Export buttons */}
           <div className="flex gap-2">
+            {referrerFilter && referrerFilter !== NO_REFERRER && (
+              <button
+                onClick={() => setShowRevenueModal(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                <FiDollarSign size={16} />
+                Revenue Calculator
+              </button>
+            )}
             <button
               onClick={exportToExcel}
               className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
@@ -1945,6 +1962,42 @@ const SalesPage = () => {
                     {t('app.next')}
                   </button>
                 </nav>
+              </div>
+            </div>
+          </div>
+        )}
+        {showRevenueModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-6">
+              <h3 className="text-lg font-semibold text-gray-900">Referrer Revenue Calculator</h3>
+              <div className="mt-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Total Sales</span>
+                  <span className="text-sm font-semibold">{formatCurrency(totalReferrerSales)}</span>
+                </div>
+                <div>
+                  <label className="block text-sm text-gray-700 mb-1">Percent (%)</label>
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={revenuePercent}
+                    onChange={(e) => setRevenuePercent(parseFloat(e.target.value) || 0)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Revenue</span>
+                  <span className="text-sm font-semibold text-green-700">{formatCurrency(totalReferrerSales * (revenuePercent / 100))}</span>
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end gap-2">
+                <button
+                  onClick={() => setShowRevenueModal(false)}
+                  className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                >
+                  Close
+                </button>
               </div>
             </div>
           </div>
