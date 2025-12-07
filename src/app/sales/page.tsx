@@ -988,6 +988,7 @@ const SalesPage = () => {
   const [actionMessage, setActionMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [showRevenueModal, setShowRevenueModal] = useState<boolean>(false);
   const [revenuePercent, setRevenuePercent] = useState<number>(10);
+  const [referrerCommissionPercent, setReferrerCommissionPercent] = useState<number | null>(null);
   
   // Filter states
   const [filters, setFilters] = useState({
@@ -1002,6 +1003,28 @@ const SalesPage = () => {
     const unsub = onAuthStateChanged(auth, (u) => setAuthUser(u));
     return () => unsub();
   }, []);
+
+  // Load commission percent for selected referrer when opening revenue modal
+  useEffect(() => {
+    let active = true;
+    const loadCommission = async () => {
+      try {
+        if (showRevenueModal && referrerFilter && referrerFilter !== NO_REFERRER) {
+          const snap = await getDoc(doc(db, 'users', referrerFilter));
+          const data = snap.data() as any;
+          const pct = typeof data?.commissionPercent === 'number' ? data.commissionPercent : Number(data?.commissionPercent ?? 0);
+          if (active) setReferrerCommissionPercent(pct);
+        } else {
+          if (active) setReferrerCommissionPercent(null);
+        }
+      } catch (e) {
+        console.error('Failed to load referrer commission percent:', e);
+        if (active) setReferrerCommissionPercent(null);
+      }
+    };
+    loadCommission();
+    return () => { active = false; };
+  }, [showRevenueModal, referrerFilter]);
 
   // Real-time subscription to latest sales (ordered by createdAt desc)
   useEffect(() => {
@@ -1975,8 +1998,21 @@ const SalesPage = () => {
                   <span className="text-sm text-gray-600">Total Sales</span>
                   <span className="text-sm font-semibold">{formatCurrency(totalReferrerSales)}</span>
                 </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Commission (%)</span>
+                  <span className="text-sm font-semibold">{referrerCommissionPercent ?? '-'}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Earnings (based on commissionPercent)</span>
+                  <span className="text-sm font-semibold text-green-700">
+                    {referrerCommissionPercent !== null
+                      ? formatCurrency(totalReferrerSales * (referrerCommissionPercent / 100))
+                      : '-'}
+                  </span>
+                </div>
+                <div className="my-3 border-t border-border"></div>
                 <div>
-                  <label className="block text-sm text-gray-700 mb-1">Percent (%)</label>
+                  <label className="block text-sm text-gray-700 mb-1">Manual Percent (%)</label>
                   <input
                     type="number"
                     min="0"
@@ -1987,8 +2023,10 @@ const SalesPage = () => {
                   />
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Revenue</span>
-                  <span className="text-sm font-semibold text-green-700">{formatCurrency(totalReferrerSales * (revenuePercent / 100))}</span>
+                  <span className="text-sm text-gray-600">Earnings (based on manualPercentage)</span>
+                  <span className="text-sm font-semibold text-green-700">
+                    {formatCurrency(totalReferrerSales * (Math.max(revenuePercent, 0) / 100))}
+                  </span>
                 </div>
               </div>
               <div className="mt-6 flex justify-end gap-2">

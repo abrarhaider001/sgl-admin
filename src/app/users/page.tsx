@@ -44,7 +44,7 @@ export default function UsersPage() {
     };
   }, []);
 
-  const [editFormData, setEditFormData] = useState({ firstName: '', lastName: '', email: '', dateOfBirth: '', country: '', state: '', city: '', gender: '', points: 0, isInfluencer: false, });
+  const [editFormData, setEditFormData] = useState({ firstName: '', lastName: '', email: '', dateOfBirth: '', country: '', state: '', city: '', gender: '', points: 0, isInfluencer: false, commissionPercent: 0 });
   const [newUserForm, setNewUserForm] = useState({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '', dateOfBirth: '', country: '', state: '', city: '', gender: '', points: 0, isInfluencer: false, });
   const usersPerPage = 10;
 
@@ -71,7 +71,21 @@ export default function UsersPage() {
 
   const editUser = (user: UserWithCards) => {
     setEditingUser(user);
-    setEditFormData({ firstName: user.firstName, lastName: user.lastName, email: user.email, dateOfBirth: user.dateOfBirth, country: user.country, state: user.state, city: user.city, gender: user.gender, points: user.points, isInfluencer: !!user.isInfluencer, });
+    setEditFormData({ firstName: user.firstName, lastName: user.lastName, email: user.email, dateOfBirth: user.dateOfBirth, country: user.country, state: user.state, city: user.city, gender: user.gender, points: user.points, isInfluencer: !!user.isInfluencer, commissionPercent: Number((user as any).commissionPercent ?? 0) });
+    console.log('Opening edit modal for user:', user.id, user);
+    userService.getUserById(user.id).then((doc) => {
+      console.log('User document details:', doc);
+      if (doc) {
+        setEditingUser(doc);
+        setEditFormData((prev) => ({
+          ...prev,
+          commissionPercent: Number((doc as any).commissionPercent ?? prev.commissionPercent ?? 0),
+          isInfluencer: !!doc.isInfluencer,
+        }));
+      }
+    }).catch((e) => {
+      console.error('Failed to fetch user document:', e);
+    });
     setShowEditModal(true);
     setShowUserModal(false);
   };
@@ -81,9 +95,20 @@ export default function UsersPage() {
     const { name } = e.target as HTMLInputElement | HTMLSelectElement;
     const isCheckbox = (e.target as HTMLInputElement).type === 'checkbox';
     const rawValue = isCheckbox ? (e.target as HTMLInputElement).checked : (e.target as HTMLInputElement | HTMLSelectElement).value;
-    const value = name === 'points' && !isCheckbox ? parseInt(String(rawValue)) || 0 : rawValue;
-    setEditFormData(prev =>
-      ({ ...prev, [name]: value as any, }));
+    const value = isCheckbox
+      ? (rawValue as boolean)
+      : name === 'points'
+      ? parseInt(String(rawValue)) || 0
+      : name === 'commissionPercent'
+      ? parseFloat(String(rawValue)) || 0
+      : rawValue;
+    setEditFormData(prev => {
+      const next: any = { ...prev, [name]: value as any };
+      if (name === 'isInfluencer' && value === true && (prev as any).commissionPercent === undefined) {
+        next.commissionPercent = Number((editingUser as any)?.commissionPercent ?? 0);
+      }
+      return next;
+    });
   };
 
   const showSnackbar = (message: string, type: 'success' | 'error' = 'success') => {
@@ -695,6 +720,21 @@ export default function UsersPage() {
                   ))}
                 </select>
               </div>
+              {editFormData.isInfluencer && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Commission percentage</label>
+                  <input
+                    type="number"
+                    name="commissionPercent"
+                    value={Number(editFormData.commissionPercent) || 0}
+                    onChange={handleEditInputChange}
+                    min="0"
+                    step="0.01"
+                    placeholder="Commission percentage"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+              )}
             </div>
 
             {/* Checkbox outside the grid */}
@@ -710,6 +750,11 @@ export default function UsersPage() {
               <label htmlFor="isInfluencer-edit" className="text-sm text-gray-700">
                 {t('users.isInfluencer')}
               </label>
+              {editFormData.isInfluencer && (
+                <span className="text-sm text-gray-500">
+                  Current: {Number((editingUser as any)?.commissionPercent ?? 0)}%
+                </span>
+              )}
             </div>
 
             <div className="flex justify-end space-x-3 pt-4">
@@ -868,6 +913,3 @@ export default function UsersPage() {
     )}    </MainLayout>
   );
 };
-
-
-

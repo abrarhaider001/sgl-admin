@@ -39,6 +39,7 @@ export interface UserWithCards {
   gender: string;
   profileImagePath: string;
   isInfluencer?: boolean;
+  commissionPercent?: number;
   cardsOwned: UserCard[];
 }
 
@@ -68,6 +69,7 @@ export interface UpdateUserRequest {
   points?: number;
   profileImagePath?: string;
   isInfluencer?: boolean;
+  commissionPercent?: number;
 }
 
 export interface UserFilters {
@@ -118,6 +120,7 @@ class UserService {
     if (input.email !== undefined && !this.isValidEmail(input.email)) errors.push('email is invalid');
     if (input.points !== undefined && (typeof input.points !== 'number' || input.points < 0)) errors.push('points must be a non-negative number');
     if (input.isInfluencer !== undefined && typeof input.isInfluencer !== 'boolean') errors.push('isInfluencer must be boolean');
+    if (input.commissionPercent !== undefined && (typeof input.commissionPercent !== 'number' || input.commissionPercent < 0)) errors.push('commissionPercent must be a non-negative number');
     return errors;
   }
 
@@ -206,6 +209,7 @@ class UserService {
           gender: userData.gender || '',
           profileImagePath: userData.profileImagePath || null,
           isInfluencer: !!userData.isInfluencer,
+          commissionPercent: Number(userData.commissionPercent ?? 0),
           cardsOwned
         });
       }
@@ -267,6 +271,7 @@ class UserService {
         gender: userData.gender || '',
         profileImagePath: userData.profileImagePath || null,
         isInfluencer: !!userData.isInfluencer,
+        commissionPercent: Number(userData.commissionPercent ?? 0),
         cardsOwned
       };
     } catch (error) {
@@ -353,6 +358,7 @@ class UserService {
         points: number;
         profileImagePath: string;
         updatedAt: string;
+        commissionPercent: number;
       }> = {
         updatedAt: new Date().toISOString()
       };
@@ -399,6 +405,9 @@ class UserService {
       }
       if (userData.isInfluencer !== undefined) {
         (updateData as any).isInfluencer = userData.isInfluencer;
+      }
+      if (userData.commissionPercent !== undefined) {
+        updateData.commissionPercent = Number(userData.commissionPercent) || 0;
       }
 
       // Update user document with existence guard
@@ -525,6 +534,7 @@ class UserService {
             gender: String(base.gender || ''),
             profileImagePath: String(base.profileImagePath || ''),
             isInfluencer: !!base.isInfluencer,
+            commissionPercent: Number(base.commissionPercent ?? 0),
             cardsOwned,
           });
         }
